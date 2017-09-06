@@ -1,1 +1,180 @@
-Hello World
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>EventBrite List</title>
+    <meta name="viewport" content="initial-scale=1.0">
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <style>
+      body {
+        padding-top:5px;
+        padding-left:5px;
+        padding-right:20px;
+      }
+
+      .event-wrapper {
+        display: flex;
+        flex-direction: row;
+        width: 100%;
+        margin:10px;
+        border:solid;
+        border-width: 0.2px;
+        border-color: lightgray;
+        border-radius:2px;
+      }
+
+      .event-wrapper:hover {
+        cursor:pointer;
+        box-shadow: 1px 1px lightgray;
+        text-decoration: none;
+      }
+
+      .event-wrapper:link, .event-wrapper:active, .event-wrapper:visited {
+        text-decoration: none;
+      }
+
+      .event-image-wrapper {
+        align-self: auto;
+        order: 0;
+        flex: 0 1 auto;
+        background-color:beige;
+        height:115px;
+        min-width:230px;
+      }
+
+      .event-image {
+        display:block;
+        height:115px;
+        margin:auto;
+      }
+
+      .event-description-wrapper {
+        order: 1;
+        flex: 1 1 auto;
+        align-self: auto;
+        word-wrap: normal;
+        padding:10px;
+      }
+
+      .event-date-time {
+        color:gray;
+      }
+
+      .all-events-wrapper {
+        text-align: center;
+      }
+
+      .all-events:link, .all-events:visited {
+          background-color:grey;
+          color: white;
+          padding: 14px 25px;
+          text-align: center; 
+          text-decoration: none;
+          display: inline-block;
+          border-radius:2px;
+      }
+
+      .all-events:hover, .all-events:active {
+          background-color: grey;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div id="event-list"></div>
+    <div id="all-events" class="all-events-wrapper"></div>
+
+    <script>
+      init();
+
+      function init() {
+        getEvents(() => {
+          var organizerId = getURLParameter('organizer.id');
+          if (!organizerId) return;
+          getOrganizer(organizerId);
+        });
+      }
+
+      function getEvents(callback) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = generateOnEventSearchResponse(callback);
+        var url = 'https://www.eventbriteapi.com/v3/events/search/?' + getEventBriteApiParams();
+        xhttp.open('GET', url, true);
+        xhttp.send();
+
+        function generateOnEventSearchResponse(callback) {
+          return function () {
+            if (this.readyState != 4 ) return;
+            if (this.status != 200) return;
+
+            // Typical action to be performed when the document is ready:
+            var response = JSON.parse(this.responseText);
+            var events = response.events;
+            var template =
+              '<a href="%%URL%%" target="_blank" class="event-wrapper">' +
+                '<div class="event-image-wrapper">' +
+                  '<img class="event-image" src="%%IMG%%">' +
+                '</div>' +
+                '<div class="event-description-wrapper">' +
+                    '<h4>' +
+                      '<small class="event-date-time">%%DATE%%</small>' +
+                      '<br>' +
+                      '%%NAME%%' +
+                    '</h4>' +
+                '</div>' +
+              '</a>';
+
+            if (events.length === 0) {
+              document.getElementById("demo").innerHTML = 'There are no scheduled events at this time. Check back again soon!';
+              return;
+            }
+
+            var numEvents = events.length > 3 ? 3 : events.length;
+            var eventsList = [];
+            for (var i = numEvents - 1; i >= 0; i--) {
+              var e = events[i];
+              eventsList.push(template.replace('%%IMG%%', e.logo.url).replace('%%DATE%%', new Date(e.start.local).toLocaleDateString()).replace('%%URL%%', e.url).replace('%%NAME%%', e.name.text));
+            }
+            document.getElementById('event-list').innerHTML = eventsList.join('');
+
+            callback();
+          };
+        }
+      }
+
+      function getOrganizer(organizerId) {
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = onOrgApiResponse;
+        var url = 'https://www.eventbriteapi.com/v3/organizers/' + organizerId + '/?' + getEventBriteApiParams();
+        xhttp.open('GET', url, true);
+        xhttp.send();
+      }
+
+      function onOrgApiResponse() {
+        if (this.readyState != 4 ) return;
+        if (this.status != 200) return;
+
+        // Typical action to be performed when the document is ready:
+        var response = JSON.parse(this.responseText);
+        var template = '<a href="%%URL%%" class="all-events">See All Events</a>';
+
+        document.getElementById('all-events').innerHTML = template.replace('%%URL%%', response.url);
+      }
+
+      function getURLParameter(name) {
+        return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.search) || [null, ''])[1].replace(/\+/g, '%20')) || null;
+      }
+
+      function getEventBriteApiParams() {
+        var urlSplit = window.location.href.split('?');
+
+        if (urlSplit.length > 1) {
+          return urlSplit[1];
+        }
+
+        return '';
+      }
+    </script>
+
+  </body>
+</html>

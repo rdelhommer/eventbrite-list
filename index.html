@@ -6,82 +6,153 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <style>
-      body {
-        padding-top:5px;
-        padding-left:5px;
-        padding-right:20px;
-      }
-
-      .event-wrapper {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
-        margin:10px;
-        border:solid;
-        border-width: 0.2px;
-        border-color: lightgray;
-        border-radius:2px;
-      }
-
-      .event-wrapper:hover {
-        cursor:pointer;
-        box-shadow: 1px 1px lightgray;
-        text-decoration: none;
-      }
-
-      .event-wrapper:link, .event-wrapper:active, .event-wrapper:visited {
-        text-decoration: none;
-      }
-
-      .event-image-wrapper {
-        align-self: auto;
-        order: 0;
-        flex: 0 1 auto;
-        background-color:beige;
-        height:115px;
-        min-width:230px;
-      }
-
-      .event-image {
-        display:block;
-        height:115px;
-        margin:auto;
-      }
-
-      .event-description-wrapper {
-        order: 1;
-        flex: 1 1 auto;
-        align-self: auto;
-        word-wrap: normal;
-        padding:10px;
-      }
-
-      .event-date-time {
-        color:gray;
-      }
-
-      .all-events-wrapper {
-        text-align: center;
-      }
-
-      .all-events:link, .all-events:visited {
-          background-color:grey;
-          color: white;
-          padding: 14px 25px;
-          text-align: center; 
-          text-decoration: none;
-          display: inline-block;
+      /* Big Screen Styles */
+      @media only screen 
+      and (min-width : 768px) {
+        .event-wrapper {
+          margin:10px;
+          border:solid;
+          border-width: 0.2px;
+          border-color: lightgray;
           border-radius:2px;
+        }
+
+        .event-wrapper:hover {
+          cursor:pointer;
+          box-shadow: 1px 1px lightgray;
+          text-decoration: none;
+        }
+
+        .event-link:link, .event-link:active, .event-link:visited {
+          text-decoration: none;
+        }
+
+        .event-flex-wrapper {
+          width: 100%;
+          display: flex;
+          flex-direction: row;
+        }
+
+        .event-image-wrapper {
+          align-self: auto;
+          order: 0;
+          flex: 0 1 auto;
+          background-color:beige;
+          height:115px;
+          width:230px;
+        }
+
+        .event-image {
+          display:block;
+          height:115px;
+          margin:auto;
+        }
+
+        .event-description-wrapper {
+          order: 1;
+          flex: 1 1 auto;
+          align-self: auto;
+          word-wrap: normal;
+          padding:10px;
+        }
+
+        .event-date-time {
+          color:gray;
+        }
+
+        .all-events-wrapper {
+          text-align: center;
+        }
+
+        .all-events:link, .all-events:visited {
+            background-color:grey;
+            color: white;
+            padding: 14px 25px;
+            text-align: center; 
+            text-decoration: none;
+            display: inline-block;
+            border-radius:2px;
+        }
+
+        .all-events:hover, .all-events:active {
+            background-color: grey;
+        }
       }
 
-      .all-events:hover, .all-events:active {
-          background-color: grey;
+      /* Small Screen Styles */
+      @media only screen 
+      and (max-width : 768px) {
+        .event-wrapper {
+          border:solid;
+          border-width: 0.2px;
+          border-color: lightgray;
+          border-radius:2px;
+          width:231px;
+          margin-top:10px;
+          margin-bottom:10px;
+          margin-left:auto;
+          margin-right:auto;
+          display:block;
+        }
+
+        .event-wrapper:hover {
+          cursor:pointer;
+          box-shadow: 1px 1px lightgray;
+          text-decoration: none;
+        }
+
+        .event-link:link, .event-link:active, .event-link:visited {
+          text-decoration: none;
+        }
+
+        .event-flex-wrapper {
+
+        }
+
+        .event-image-wrapper {
+          background-color:beige;
+          width:230px;
+        }
+
+        .event-image {
+          display:block;
+          height:115px;
+          margin:auto;
+        }
+
+        .event-description-wrapper {
+          word-wrap: normal;
+          padding:10px;
+          width:230px;
+        }
+
+        .event-date-time {
+          color:gray;
+        }
+
+        .all-events-wrapper {
+          text-align: center;
+        }
+
+        .all-events:link, .all-events:visited {
+            background-color:grey;
+            color: white;
+            padding: 14px 25px;
+            text-align: center; 
+            text-decoration: none;
+            display: inline-block;
+            border-radius:2px;
+        }
+
+        .all-events:hover, .all-events:active {
+            background-color: grey;
+        }
       }
 
     </style>
   </head>
   <body>
-    <div id="event-list"></div>
+    <div id="event-list" class="event-list"></div>
     <div id="all-events" class="all-events-wrapper"></div>
 
     <script>
@@ -111,18 +182,22 @@
             var response = JSON.parse(this.responseText);
             var events = response.events;
             var template =
-              '<a href="%%URL%%" target="_blank" class="event-wrapper">' +
-                '<div class="event-image-wrapper">' +
-                  '<img class="event-image" src="%%IMG%%">' +
-                '</div>' +
-                '<div class="event-description-wrapper">' +
-                    '<h4>' +
-                      '<small class="event-date-time">%%DATE%%</small>' +
-                      '<br>' +
-                      '%%NAME%%' +
-                    '</h4>' +
-                '</div>' +
-              '</a>';
+              '<div class="event-wrapper">' +
+                '<a href="%%URL%%" target="_blank" class="event-link">' +
+                  '<div class="event-flex-wrapper">' +
+                    '<div class="event-image-wrapper">' +
+                      '<img class="event-image" src="%%IMG%%">' +
+                    '</div>' +
+                    '<div class="event-description-wrapper">' +
+                        '<h4>' +
+                          '<small class="event-date-time">%%DATE%%</small>' +
+                          '<br>' +
+                          '%%NAME%%' +
+                        '</h4>' +
+                    '</div>' +
+                  '</div>' +
+                '</a>' +
+              '</div>';
 
             if (events.length === 0) {
               document.getElementById("demo").innerHTML = 'There are no scheduled events at this time. Check back again soon!';

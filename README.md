@@ -1,37 +1,11 @@
-## Welcome to GitHub Pages
+# EventBrite Event List Widget
+This widget can be used to list events for a particular organizer.  I haven't tested it with other use cases at this time.
 
-You can use the [editor on GitHub](https://github.com/rdelhommer/eventbrite-list/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
-
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
-
-### Markdown
-
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
-
-```markdown
-Syntax highlighted code block
-
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
+## Usage
+Embed the widget with an iframe and include an organizer id and token in the url params.  Whatever params you provide are appended to the events/search API query.
+```html
+<iframe style="height:100vh;width:100%" src="https://rdelhommer.github.io/eventbrite-list/?organizer.id=13839265448&token=JLMWBOJRBAWINRIWD4UJ"></iframe>
 ```
 
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/rdelhommer/eventbrite-list/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
+## Contributions
+As the usage of this widget is fairly narrow at this time, all contributions are welcome and encouraged. <3

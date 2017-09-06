@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>EventBrite List</title>
+    <title>EventBrite Event List</title>
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -37,7 +37,6 @@
           align-self: auto;
           order: 0;
           flex: 0 1 auto;
-          background-color:beige;
           height:115px;
           width:230px;
         }
@@ -105,12 +104,7 @@
           text-decoration: none;
         }
 
-        .event-flex-wrapper {
-
-        }
-
         .event-image-wrapper {
-          background-color:beige;
           width:230px;
         }
 
@@ -135,17 +129,17 @@
         }
 
         .all-events:link, .all-events:visited {
-            background-color:grey;
-            color: white;
-            padding: 14px 25px;
-            text-align: center; 
-            text-decoration: none;
-            display: inline-block;
-            border-radius:2px;
+          background-color:grey;
+          color: white;
+          padding: 14px 25px;
+          text-align: center; 
+          text-decoration: none;
+          display: inline-block;
+          border-radius:2px;
         }
 
         .all-events:hover, .all-events:active {
-            background-color: grey;
+          background-color: grey;
         }
       }
 
@@ -185,8 +179,8 @@
               '<div class="event-wrapper">' +
                 '<a href="%%URL%%" target="_blank" class="event-link">' +
                   '<div class="event-flex-wrapper">' +
-                    '<div class="event-image-wrapper">' +
-                      '<img class="event-image" src="%%IMG%%">' +
+                    '<div style="background-color:%%EDGE_COLOR%%" class="event-image-wrapper">' +
+                      '<img class="event-image" src="%%IMG%%" alt="%%NAME%%">' +
                     '</div>' +
                     '<div class="event-description-wrapper">' +
                         '<h4>' +
@@ -208,7 +202,13 @@
             var eventsList = [];
             for (var i = numEvents - 1; i >= 0; i--) {
               var e = events[i];
-              eventsList.push(template.replace('%%IMG%%', e.logo.url).replace('%%DATE%%', new Date(e.start.local).toLocaleDateString()).replace('%%URL%%', e.url).replace('%%NAME%%', e.name.text));
+              eventsList.push(
+                template.replace('%%IMG%%', e.logo.url)
+                  .replace('%%DATE%%', new Date(e.start.local).toLocaleDateString())
+                  .replace('%%URL%%', e.url)
+                  .replace('%%NAME%%', e.name.text)
+                  .replace('%%NAME%%', e.name.text)
+                  .replace('%%EDGE_COLOR%%', e.logo.edge_color));
             }
             document.getElementById('event-list').innerHTML = eventsList.join('');
 
